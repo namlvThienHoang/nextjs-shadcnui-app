@@ -18,8 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { genders, labels } from "../data/data"
-import { userSchema } from "../data/schema"
+import { categories } from "../data/data"
+import { productSchema } from "../data/schema"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -28,7 +28,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const user = userSchema.parse(row.original)
+  const product = productSchema.parse(row.original)
 
   return (
     <DropdownMenu>
@@ -49,10 +49,10 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={user.gender}>
-              {genders.map((gender) => (
-                <DropdownMenuRadioItem key={gender.value} value={gender.value}>
-                  {gender.label}
+            <DropdownMenuRadioGroup value={product.category}>
+              {categories.map((category) => (
+                <DropdownMenuRadioItem key={category.value} value={category.value}>
+                  {category.label}
                 </DropdownMenuRadioItem>
               ))}
             </DropdownMenuRadioGroup>

@@ -30,6 +30,12 @@ export function MainNav({
         Products
       </Link>
       <Link
+        href="/dashboard/order"
+        className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+      >
+        Orders
+      </Link>
+      <Link
         href="/dashboard/setting"
         className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
       >

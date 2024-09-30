@@ -1,51 +1,35 @@
 import { Metadata } from "next"
-import Image from "next/image"
 import { z } from "zod"
 
 import { columns } from "./_components/columns"
-import { DataTable } from "./_components/data-table"
-import { taskSchema } from "./data/schema"
+import { CustomerDataTable } from "./_components/data-table"
+import { userSchema } from "./data/schema"
 import api from "@/services/axios-custom"
 
 export const metadata: Metadata = {
-  title: "Tasks",
+  title: "Customers",
   description: "A task and issue tracker build using Tanstack Table.",
 }
 
 // Simulate a database read for tasks.
-async function getTasks() {
+async function getAllUsers() {
   try {
-    const response = await api.get("https://dummyjson.com/c/2a53-aa52-4855-a0b7");
+    const response = await api.get("https://dummyjson.com/users");
 
-    const tasks = response.data;
+    const users = response.data.users;
 
-    return z.array(taskSchema).parse(tasks);
+    return await z.array(userSchema).parseAsync(users);
   } catch (error) {
+    console.log(error)
     throw new Error(`Failed to fetch tasks: ${error}`);
   }
 }
 
-export default async function TaskPage() {
-  const tasks = await getTasks()
+export default async function UserPage() {
+  const users = await getAllUsers()
 
   return (
     <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/tasks-light.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/tasks-dark.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="hidden dark:block"
-        />
-      </div>
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
         <div className="flex items-center justify-between space-y-2">
           <div>
@@ -55,8 +39,9 @@ export default async function TaskPage() {
             </p>
           </div>
         </div>
-        <DataTable data={tasks} columns={columns} />
+        <CustomerDataTable data={users} columns={columns} />
       </div>
     </>
   )
 }
+

@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DataTableViewOptions } from "./data-table-view-options"
 
-import { genders, priorities, roles, statuses } from "../data/data"
+import { categories } from "../data/data"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
+import { PlusCircle, File } from "lucide-react"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -23,32 +24,18 @@ export function DataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter username..."
-          value={(table.getColumn("username")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter sku..."
+          value={(table.getColumn("sku")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("username")?.setFilterValue(event.target.value)
+            table.getColumn("sku")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("status") && (
+        {table.getColumn("category") && (
           <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Trạng thái"
-            options={statuses}
-          />
-        )}
-        {table.getColumn("gender") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("gender")}
-            title="Giới tính"
-            options={genders}
-          />
-        )}
-        {table.getColumn("role") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("role")}
-            title="Role"
-            options={roles}
+            column={table.getColumn("category")}
+            title="Category"
+            options={categories}
           />
         )}
         {isFiltered && (
@@ -62,6 +49,18 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
+      <Button size="sm" variant="outline" className="h-7 gap-1 mr-4">
+        <File className="h-3.5 w-3.5" />
+        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+          Export
+        </span>
+      </Button>
+      <Button size="sm" className="h-7 gap-1 mr-4">
+        <PlusCircle className="h-3.5 w-3.5" />
+        <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+          Add Product
+        </span>
+      </Button>
       <DataTableViewOptions table={table} />
     </div>
   )

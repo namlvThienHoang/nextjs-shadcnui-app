@@ -9,20 +9,7 @@ import {
     StopwatchIcon,
   } from "@radix-ui/react-icons"
 
-  export const genders = [
-    {
-      value: "male",
-      label: "Nam",
-    },
-    {
-      value: "female",
-      label: "Nữ",
-    },
-    {
-      value: "other",
-      label: "Khác",
-    },
-  ]
+
   
   export const labels = [
     {
@@ -67,38 +54,22 @@ import {
     },
   ]
 
-  export const roles = [
-    {
-      value: "admin",
-      label: "Admin",
-      icon: ArrowDownIcon,
-    },
-    {
-      value: "manager",
-      label: "Manager",
-      icon: ArrowDownIcon,
-    },
-    {
-      value: "customer",
-      label: "Customer",
-      icon: ArrowDownIcon,
-    }
-  ]
+
   
-  export const priorities = [
+  export const categories = [
     {
-      label: "Low",
-      value: "low",
+      label: "beauty",
+      value: "Beauty",
       icon: ArrowDownIcon,
     },
     {
-      label: "Medium",
-      value: "medium",
+      label: "fragrances",
+      value: "Fragrances",
       icon: ArrowRightIcon,
     },
     {
-      label: "High",
-      value: "high",
+      label: "furniture",
+      value: "Furniture",
       icon: ArrowUpIcon,
     },
   ]
