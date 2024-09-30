@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CalendarIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
@@ -33,6 +34,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import api from "@/services/axios-custom"
 
 const languages = [
   { label: "English", value: "en" },
@@ -65,17 +67,35 @@ const accountFormSchema = z.object({
 
 type AccountFormValues = z.infer<typeof accountFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<AccountFormValues> = {
-  // name: "Your name",
-  // dob: new Date("2023-01-23"),
-}
-
 export function AccountForm() {
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
-    defaultValues,
+    defaultValues: {
+      name: "",
+      dob: new Date(),
+      language: "",
+    },
   })
+
+  useEffect(() => {
+    // Fetch the user information from the API
+    const fetchUser = async () => {
+      try {
+        const response = await api.get("https://dummyjson.com/auth/me")
+        const userData = response.data
+
+        // Populate the form with the fetched user data
+        form.setValue("name", userData.username) // or userData.name
+        // Assuming the user has a date of birth
+        form.setValue("dob", new Date(userData.birthDate))
+        form.setValue("language", userData.language || "en")
+      } catch (error) {
+        console.error("Error fetching user:", error)
+      }
+    }
+
+    fetchUser()
+  }, [form])
 
   function onSubmit(data: AccountFormValues) {
     toast({

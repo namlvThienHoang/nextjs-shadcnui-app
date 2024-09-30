@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import { AuthService } from "@/services/auth-service"
 import { toast } from "@/hooks/use-toast"
 import { useEffect, useState } from "react"
+import api from "@/services/axios-custom"
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
@@ -21,14 +22,25 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [errorMessage, setErrorMessage] = useState<string>("")
 
   const router = useRouter()
-  const { login, getToken } = AuthService()
+  const { login, getToken, getUserRole } = AuthService();
+
 
   useEffect(() => {
-    const auth = getToken()
-    if (auth) {
-      router.push("/dashboard")
-    }
-  }, [getToken, router])
+    const checkUserRole = async () => {
+      const auth = getToken();
+      if (auth) {
+        const role = await getUserRole(); // Assume getUserRole() returns 'admin' or 'customer'
+        
+        if (role === "customer") {
+          router.push("/dashboard");
+        } else if (role === "admin") {
+          router.push("/shop");
+        }
+      }
+    };
+  
+    checkUserRole();
+  }, [getToken, getUserRole, router]);
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
@@ -40,7 +52,13 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       toast({
         title: "Đăng nhập thành công",
       })
-      router.push("/dashboard")
+      const role = await getUserRole() // After login, check the role
+ // After login, check the role
+      if (role === "admin") {
+        router.push("/dashboard")
+      } else if (role === "customer") {
+        router.push("/shop")
+      }
     } else {
       setErrorMessage(
         "Tài khoản hoặc mật khẩu không chính xác, vui lòng kiểm tra lại."

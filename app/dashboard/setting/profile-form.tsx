@@ -26,6 +26,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { useEffect } from "react"
+import api from "@/services/axios-custom"
 
 const profileFormSchema = z.object({
   username: z
@@ -73,6 +75,26 @@ export function ProfileForm() {
     name: "urls",
     control: form.control,
   })
+
+  useEffect(() => {
+    // Fetch the user information from the API
+    const fetchUser = async () => {
+      try {
+        const response = await api.get("https://dummyjson.com/auth/me")
+        const userData = response.data
+
+        // Populate the form with the fetched user data
+        form.setValue("username", userData.username) // or userData.name
+        // Assuming the user has a date of birth
+        form.setValue("email", userData.email)
+        form.setValue("bio", userData.language || "en")
+      } catch (error) {
+        console.error("Error fetching user:", error)
+      }
+    }
+
+    fetchUser()
+  }, [form])
 
   function onSubmit(data: ProfileFormValues) {
     toast({

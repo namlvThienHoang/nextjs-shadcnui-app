@@ -1,6 +1,6 @@
 'user client'
 import axios from "axios";
-import { AuthResponse, Login, TokenResponse } from "../types/auth";
+import { Login } from "../types/auth";
 export const AuthService = () => {
     const login = async (data: { username: string; password: string }) => {
         const body: Login = {
@@ -10,6 +10,8 @@ export const AuthService = () => {
         try {
             const res = await axios.post("https://dummyjson.com/auth/login", body);
             console.log(res);
+            // Set the token in cookies
+            
             setToken(res.data.accessToken);
             setRefreshToken(res.data.refreshToken);
             return true;
@@ -18,13 +20,13 @@ export const AuthService = () => {
         }
     };
 
-    const refreshToken = async (data: { tenDV: any }) => {
+    const refreshToken = async () => {
         const refreshToken = getRefreshToken() || {};
         const body = {
             refresh_token: refreshToken,
         };
         try {
-            const res = await axios.post("/auth/refresh", body);
+            const res = await axios.post("https://dummyjson.com/auth/refresh", body);
             setToken(res.data.accessToken);
             setRefreshToken(res.data.refreshToken);
             return true;
@@ -36,6 +38,7 @@ export const AuthService = () => {
 
     const setToken = (token: string) => {
         if (typeof window !== "undefined") {
+            document.cookie = `authToken=${token}; path=/;`;
             localStorage.setItem("token", JSON.stringify(token));
         }
     };
@@ -62,6 +65,27 @@ export const AuthService = () => {
         return refreshToken ? JSON.parse(refreshToken) : null;
     };
 
+    const getUserRole = async () => {
+        try {
+            const token = getToken();
+            if (!token) {
+                throw new Error("Token not found.");
+            }
+    
+            const res = await axios.get("https://dummyjson.com/auth/me", {
+                headers: {
+                  'Authorization': 'Bearer ' + token, 
+                }
+            });
+    
+            return res.data.role;
+        } catch (error) {
+            console.error('Error fetching user role:', error);
+            return null; 
+        }
+    };
+    
+
     
     const setLogout = () => {
         localStorage.removeItem("token");
@@ -74,6 +98,7 @@ export const AuthService = () => {
         setLogout,
         setToken,
         setRefreshToken,
-        getRefreshToken
+        getRefreshToken,
+        getUserRole
     };
 };
