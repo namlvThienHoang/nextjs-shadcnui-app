@@ -3,6 +3,9 @@ import { ApiUrl } from "@/public/app-setting";
 import { AuthService } from "./auth-service";
 const api = axios.create({
     baseURL: ApiUrl,
+    headers: {
+        'Content-Type': 'application/json',
+      },
 });
 
 api.interceptors.request.use(

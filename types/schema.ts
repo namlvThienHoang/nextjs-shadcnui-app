@@ -15,7 +15,6 @@ export const productSchema = z.object({
   weight: z.number().optional(),
   warrantyInformation: z.string().optional(),
   shippingInformation: z.string().optional(),
-  availabilityStatus: z.string().optional(),
   reviews: z.array(
     z.object({
       rating: z.number().optional(),
@@ -25,12 +24,9 @@ export const productSchema = z.object({
       reviewerEmail: z.string().email().optional(), // Email phải được xác thực định dạng
     })
   ).optional(),
-  returnPolicy: z.string().optional(),
-  minimumOrderQuantity: z.number().optional(),
   meta: z.object({
     createdAt: z.string().optional(), // Hoặc z.date() nếu bạn cần convert thành Date object
     updatedAt: z.string().optional(),
-    barcode: z.string().optional(),
     qrCode: z.string().optional(), // Có thể có hoặc không
   }).optional(),
   thumbnail: z.string().optional(), // Có thể có hoặc không

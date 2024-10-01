@@ -31,6 +31,8 @@ class BaseService {
 
     return res;
   };
+
+  
   get = async (url: string) => {
     const res: any = await api.get(url);
     return res;

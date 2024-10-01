@@ -19,10 +19,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { categories } from "../data/data"
-import { productSchema } from "../data/schema"
+import { productSchema } from "../../../../types/schema"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { productServices } from "../_services/product"
+import { useDeleteProduct } from "@/hooks/use-products"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -32,6 +32,7 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const product = productSchema.parse(row.original)
+  const { deleteProduct } = useDeleteProduct();
 
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -45,7 +46,7 @@ export function DataTableRowActions<TData>({
     if (confirmDelete) {
       setIsDeleting(true);
       try {
-         productServices.del(Number(product.id));
+        deleteProduct(Number(product.id));
       } catch (error) {
         console.error('Error deleting product:', error);
       } finally {
