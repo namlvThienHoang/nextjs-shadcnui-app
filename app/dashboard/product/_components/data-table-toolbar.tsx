@@ -10,6 +10,7 @@ import { DataTableViewOptions } from "./data-table-view-options"
 import { categories } from "../data/data"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 import { PlusCircle, File } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -19,6 +20,11 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
+  const router = useRouter();
+
+  const handleCreate = () => {
+    router.push(`/dashboard/product/create`); // Adjust the path according to your routing
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -55,7 +61,7 @@ export function DataTableToolbar<TData>({
           Export
         </span>
       </Button>
-      <Button size="sm" className="h-7 gap-1 mr-4">
+      <Button size="sm" onClick={handleCreate} className="h-7 gap-1 mr-4">
         <PlusCircle className="h-3.5 w-3.5" />
         <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
           Add Product

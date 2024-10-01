@@ -20,6 +20,9 @@ import {
 
 import { categories } from "../data/data"
 import { productSchema } from "../data/schema"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { productServices } from "../_services/product"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -30,6 +33,26 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const product = productSchema.parse(row.original)
 
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleEdit = () => {
+    router.push(`/dashboard/product/update/${product.id}`); // Adjust the path according to your routing
+  };
+
+  const handleDelete = async () => {
+    const confirmDelete = confirm('Are you sure you want to delete this product?');
+    if (confirmDelete) {
+      setIsDeleting(true);
+      try {
+         productServices.del(Number(product.id));
+      } catch (error) {
+        console.error('Error deleting product:', error);
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -42,8 +65,8 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => alert('Make a copy action')}>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSub>
@@ -59,7 +82,7 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleDelete}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
