@@ -3,6 +3,8 @@ import { columns } from "./_components/columns"
 import { ProductDataTable } from "./_components/data-table"
 import { Product } from "./data/schema"
 import { Metadata } from "next";
+import { BreadcrumbWithCustomSeparator } from "@/components/breadcrum";
+import { BreadcrumbProps } from "@/types/type";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -24,18 +26,25 @@ async function getData(): Promise<Product[]> {
 }
 
 export default async function ProductPage() {
-  const data = await getData()
+  const data = await getData();
+
+  const breadcrumbItems: BreadcrumbProps['items'] = [
+    { label: "Home", href: "/dashboard" },
+    { label: "Products", href: "/dashboard/products" },
+    { label: "Products", href: "/dashboard/products" }
+  ];
 
   return (
     <>
     <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="flex items-center justify-between space-y-2">
-        <div>
+      <BreadcrumbWithCustomSeparator items={breadcrumbItems} />
+        {/* <div>
           <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
           <p className="text-muted-foreground">
             Here&apos;s a list of your tasks for this month!
           </p>
-        </div>
+        </div> */}
       </div>
       <ProductDataTable data={data} columns={columns} />
     </div>

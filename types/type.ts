@@ -54,5 +54,12 @@ export type Stat = {
     filter?: any;
     search?: string;
   }
+
+  export type BreadcrumbProps = {
+    items: {
+      label: string;
+      href?: string; // Optional if it's a page and not a link
+    }[];
+  };
   
   

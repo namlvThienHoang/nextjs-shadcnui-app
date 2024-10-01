@@ -23,6 +23,7 @@ import React, { useEffect, useState } from "react";
 export function UserNav() {
   const router = useRouter();
   const { setLogout } = AuthService();
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState(""); // Initialize as an empty string
   const [urlImage, setUrlImage] = useState(""); // Initialize as an empty string
 
@@ -31,6 +32,7 @@ export function UserNav() {
       try {
         const response = await api.get("https://dummyjson.com/auth/me");
         console.log();
+        setUsername(response.data.username);
         setEmail(response.data.email);
         setUrlImage(response.data.image);
       } catch (error) {
@@ -58,7 +60,7 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">shadcn</p>
+            <p className="text-sm font-medium leading-none">{username}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {email}
             </p>
