@@ -2,8 +2,7 @@
 "use memo"
 
 import * as React from "react"
-import { tasks, type Task } from "@/db/schema"
-import { type DataTableFilterField } from "@/types"
+import { type DataTableFilterField } from "@/types/type"
 
 import { useDataTable } from "@/hooks/use-data-table"
 import { DataTableAdvancedToolbar } from "@/components/data-table/advanced/data-table-advanced-toolbar"
@@ -11,11 +10,12 @@ import { DataTable } from "@/components/data-table/data-table"
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar"
 
 import { type getTasks } from "../_lib/queries"
-import { getPriorityIcon, getStatusIcon } from "../_lib/utils"
 import { getColumns } from "./tasks-table-columns"
 import { TasksTableFloatingBar } from "./tasks-table-floating-bar"
 import { useTasksTable } from "./tasks-table-provider"
 import { TasksTableToolbarActions } from "./tasks-table-toolbar-actions"
+import { Task } from "@/types/schema"
+import { taskPriorities, taskStatus } from "../_lib/data"
 
 interface TasksTableProps {
   tasksPromise: ReturnType<typeof getTasks>
@@ -50,20 +50,20 @@ export function TasksTable({ tasksPromise }: TasksTableProps) {
     {
       label: "Status",
       value: "status",
-      options: tasks.status.enumValues.map((status) => ({
-        label: status[0]?.toUpperCase() + status.slice(1),
-        value: status,
-        icon: getStatusIcon(status),
+      options: taskStatus.map((status) => ({
+        label: status.label[0].toUpperCase() + status.label.slice(1),
+        value: status.value,
+        icon: status.icon,
         withCount: true,
       })),
     },
     {
       label: "Priority",
       value: "priority",
-      options: tasks.priority.enumValues.map((priority) => ({
-        label: priority[0]?.toUpperCase() + priority.slice(1),
-        value: priority,
-        icon: getPriorityIcon(priority),
+      options: taskPriorities.map((priority) => ({
+        label: priority.label[0]?.toUpperCase() + priority.label.slice(1),
+        value: priority.value,
+        icon: priority.icon,
         withCount: true,
       })),
     },

@@ -47,7 +47,9 @@ export function CreateTaskDialog() {
       const { error } = await createTask(input)
 
       if (error) {
-        toast(error)
+        toast({
+          title: error
+        })
         return
       }
 

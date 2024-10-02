@@ -5,22 +5,22 @@ const api = axios.create({
     baseURL: ApiUrl,
     headers: {
         'Content-Type': 'application/json',
-      },
+      }
 });
 
-api.interceptors.request.use(
-    (config) => {
-        const { getToken } = AuthService();
-        const token = getToken() || {};
-        if (token) {
-            config.headers["Authorization"] = "Bearer " + token;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+// api.interceptors.request.use(
+//     (config) => {
+//         const { getToken } = AuthService();
+//         const token = getToken() || {};
+//         if (token) {
+//             config.headers["Authorization"] = "Bearer " + token;
+//         }
+//         return config;
+//     },
+//     (error) => {
+//         return Promise.reject(error);
+//     }
+// );
 
 const refresh = async () => {
     const { getRefreshToken } = AuthService();

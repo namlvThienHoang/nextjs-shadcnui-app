@@ -1,5 +1,4 @@
 import * as React from "react"
-import { tasks, type Task } from "@/db/schema"
 import {
   ArrowUpIcon,
   CheckCircledIcon,
@@ -29,6 +28,8 @@ import {
 import { Kbd } from "@/components/kbd"
 
 import { deleteTasks, updateTasks } from "../_lib/actions"
+import { Task } from "@/types/schema"
+import { taskPriorities, taskStatus } from "../_lib/data"
 
 interface TasksTableFloatingBarProps {
   table: Table<Task>
@@ -93,7 +94,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
 
                 startTransition(async () => {
                   const { error } = await updateTasks({
-                    ids: rows.map((row) => row.original.id),
+                    ids: rows.map((row) => row.original.id || ''),
                     status: value,
                   })
 
@@ -135,13 +136,13 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
               </Tooltip>
               <SelectContent align="center">
                 <SelectGroup>
-                  {tasks.status.enumValues.map((status) => (
+                  {taskStatus.map((status) => (
                     <SelectItem
-                      key={status}
-                      value={status}
+                      key={status.value}
+                      value={status.value}
                       className="capitalize"
                     >
-                      {status}
+                      {status.label}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -153,7 +154,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
 
                 startTransition(async () => {
                   const { error } = await updateTasks({
-                    ids: rows.map((row) => row.original.id),
+                    ids: rows.map((row) => row.original.id || ''),
                     priority: value,
                   })
 
@@ -192,13 +193,13 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
               </Tooltip>
               <SelectContent align="center">
                 <SelectGroup>
-                  {tasks.priority.enumValues.map((priority) => (
+                  {taskPriorities.map((priority) => (
                     <SelectItem
-                      key={priority}
-                      value={priority}
+                      key={priority.value}
+                      value={priority.value}
                       className="capitalize"
                     >
-                      {priority}
+                      {priority.label}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -247,7 +248,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
 
                     startTransition(async () => {
                       const { error } = await deleteTasks({
-                        ids: rows.map((row) => row.original.id),
+                        ids: rows.map((row) => row.original.id || ''),
                       })
 
                       if (error) {

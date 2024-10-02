@@ -1,10 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { tasks, type Task } from "@/db/schema"
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { type ColumnDef } from "@tanstack/react-table"
-import { toast } from "sonner"
 
 import { getErrorMessage } from "@/lib/handle-error"
 import { formatDate } from "@/lib/utils"
@@ -27,9 +25,11 @@ import {
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 
 import { updateTask } from "../_lib/actions"
-import { getPriorityIcon, getStatusIcon } from "../_lib/utils"
 import { DeleteTasksDialog } from "./delete-tasks-dialog"
 import { UpdateTaskSheet } from "./update-task-sheet"
+import { Task } from "@/types/schema"
+import { taskLabels, taskPriorities, taskStatus } from "../_lib/data"
+import { toast } from "sonner"
 
 export function getColumns(): ColumnDef<Task>[] {
   return [
@@ -72,13 +72,13 @@ export function getColumns(): ColumnDef<Task>[] {
         <DataTableColumnHeader column={column} title="Title" />
       ),
       cell: ({ row }) => {
-        const label = tasks.label.enumValues.find(
-          (label) => label === row.original.label
+        const label = taskLabels.find(
+          (label) => label.value === row.original.label
         )
 
         return (
           <div className="flex space-x-2">
-            {label && <Badge variant="outline">{label}</Badge>}
+            {label && <Badge variant="outline">{label.label}</Badge>}
             <span className="max-w-[31.25rem] truncate font-medium">
               {row.getValue("title")}
             </span>
@@ -92,13 +92,13 @@ export function getColumns(): ColumnDef<Task>[] {
         <DataTableColumnHeader column={column} title="Status" />
       ),
       cell: ({ row }) => {
-        const status = tasks.status.enumValues.find(
-          (status) => status === row.original.status
+        const status = taskStatus.find(
+          (status) => status.value === row.original.status
         )
 
         if (!status) return null
 
-        const Icon = getStatusIcon(status)
+        const Icon = status.icon
 
         return (
           <div className="flex w-[6.25rem] items-center">
@@ -106,7 +106,7 @@ export function getColumns(): ColumnDef<Task>[] {
               className="mr-2 size-4 text-muted-foreground"
               aria-hidden="true"
             />
-            <span className="capitalize">{status}</span>
+            <span className="capitalize">{status.label}</span>
           </div>
         )
       },
@@ -120,13 +120,13 @@ export function getColumns(): ColumnDef<Task>[] {
         <DataTableColumnHeader column={column} title="Priority" />
       ),
       cell: ({ row }) => {
-        const priority = tasks.priority.enumValues.find(
-          (priority) => priority === row.original.priority
+        const priority = taskPriorities.find(
+          (priority) => priority.value === row.original.priority
         )
 
         if (!priority) return null
 
-        const Icon = getPriorityIcon(priority)
+        const Icon = priority.icon
 
         return (
           <div className="flex items-center">
@@ -134,7 +134,7 @@ export function getColumns(): ColumnDef<Task>[] {
               className="mr-2 size-4 text-muted-foreground"
               aria-hidden="true"
             />
-            <span className="capitalize">{priority}</span>
+            <span className="capitalize">{priority.label}</span>
           </div>
         )
       },
@@ -195,7 +195,7 @@ export function getColumns(): ColumnDef<Task>[] {
                         startUpdateTransition(() => {
                           toast.promise(
                             updateTask({
-                              id: row.original.id,
+                              id: row.original.id || '',
                               label: value as Task["label"],
                             }),
                             {
@@ -207,14 +207,14 @@ export function getColumns(): ColumnDef<Task>[] {
                         })
                       }}
                     >
-                      {tasks.label.enumValues.map((label) => (
+                      {taskLabels.map((label) => (
                         <DropdownMenuRadioItem
-                          key={label}
-                          value={label}
+                          key={label.value}
+                          value={label.value}
                           className="capitalize"
                           disabled={isUpdatePending}
                         >
-                          {label}
+                          {label.label}
                         </DropdownMenuRadioItem>
                       ))}
                     </DropdownMenuRadioGroup>

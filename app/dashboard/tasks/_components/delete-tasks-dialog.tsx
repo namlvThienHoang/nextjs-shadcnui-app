@@ -1,10 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { type Task } from "@/db/schema"
 import { TrashIcon } from "@radix-ui/react-icons"
 import { type Row } from "@tanstack/react-table"
-import { toast } from "sonner"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
@@ -31,6 +29,8 @@ import {
 import { Icons } from "@/components/icons"
 
 import { deleteTasks } from "../_lib/actions"
+import { toast } from "@/hooks/use-toast"
+import { Task } from "@/types/schema"
 
 interface DeleteTasksDialogProps
   extends React.ComponentPropsWithoutRef<typeof Dialog> {
@@ -51,16 +51,20 @@ export function DeleteTasksDialog({
   function onDelete() {
     startDeleteTransition(async () => {
       const { error } = await deleteTasks({
-        ids: tasks.map((task) => task.id),
+        ids: tasks.map((task) => task.id || ''),
       })
 
       if (error) {
-        toast.error(error)
+        toast({
+          title: error
+      })
         return
       }
 
       props.onOpenChange?.(false)
-      toast.success("Tasks deleted")
+      toast({
+          title: "Tasks deleted"
+      })
       onSuccess?.()
     })
   }

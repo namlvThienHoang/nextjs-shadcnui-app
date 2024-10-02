@@ -19,18 +19,31 @@ export const productSchema = z.object({
     z.object({
       rating: z.number().optional(),
       comment: z.string().optional(),
-      date: z.string().optional(), // hoặc z.date() nếu bạn muốn parse thành object Date
+      date: z.string().optional(), 
       reviewerName: z.string().optional(),
-      reviewerEmail: z.string().email().optional(), // Email phải được xác thực định dạng
+      reviewerEmail: z.string().email().optional(), 
     })
   ).optional(),
   meta: z.object({
-    createdAt: z.string().optional(), // Hoặc z.date() nếu bạn cần convert thành Date object
+    createdAt: z.string().optional(), 
     updatedAt: z.string().optional(),
-    qrCode: z.string().optional(), // Có thể có hoặc không
+    qrCode: z.string().optional(), 
   }).optional(),
-  thumbnail: z.string().optional(), // Có thể có hoặc không
-  images: z.array(z.string()).optional(), // Có thể có hoặc không
+  thumbnail: z.string().optional(), 
+  images: z.array(z.string()).optional(), 
+});
+
+
+export const taskSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().optional(),
+  code: z.string().optional(),
+  status: z.string().optional(),
+  label: z.string().optional(),
+  priority: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export type Product = z.infer<typeof productSchema>
+export type Task = z.infer<typeof taskSchema>

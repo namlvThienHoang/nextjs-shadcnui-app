@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { tasks } from "@/db/schema"
 import { type UseFormReturn } from "react-hook-form"
 
 import {
@@ -21,7 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { type CreateTaskSchema } from "@/app/_lib/validations"
+import { type CreateTaskSchema } from "../_lib/validations"
+import { taskLabels, taskPriorities, taskStatus } from "../_lib/data"
 
 interface CreateTaskFormProps
   extends Omit<React.ComponentPropsWithRef<"form">, "onSubmit"> {
@@ -72,13 +72,13 @@ export function CreateTaskForm({
                 </FormControl>
                 <SelectContent>
                   <SelectGroup>
-                    {tasks.label.enumValues.map((item) => (
+                    {taskLabels.map((item) => (
                       <SelectItem
-                        key={item}
-                        value={item}
+                        key={item.value}
+                        value={item.value}
                         className="capitalize"
                       >
-                        {item}
+                        {item.label}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -102,13 +102,13 @@ export function CreateTaskForm({
                 </FormControl>
                 <SelectContent>
                   <SelectGroup>
-                    {tasks.status.enumValues.map((item) => (
+                    {taskStatus.map((item) => (
                       <SelectItem
-                        key={item}
-                        value={item}
+                        key={item.value}
+                        value={item.value}
                         className="capitalize"
                       >
-                        {item}
+                        {item.label}
                       </SelectItem>
                     ))}
                   </SelectGroup>
@@ -132,13 +132,13 @@ export function CreateTaskForm({
                 </FormControl>
                 <SelectContent>
                   <SelectGroup>
-                    {tasks.priority.enumValues.map((item) => (
+                    {taskPriorities.map((item) => (
                       <SelectItem
-                        key={item}
-                        value={item}
+                        key={item.value}
+                        value={item.value}
                         className="capitalize"
                       >
-                        {item}
+                        {item.label}
                       </SelectItem>
                     ))}
                   </SelectGroup>

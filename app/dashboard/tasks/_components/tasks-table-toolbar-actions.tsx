@@ -1,6 +1,5 @@
 "use client"
 
-import { type Task } from "@/db/schema"
 import { DownloadIcon } from "@radix-ui/react-icons"
 import { type Table } from "@tanstack/react-table"
 
@@ -9,6 +8,7 @@ import { Button } from "@/components/ui/button"
 
 import { CreateTaskDialog } from "./create-task-dialog"
 import { DeleteTasksDialog } from "./delete-tasks-dialog"
+import { Task } from "@/types/schema"
 
 interface TasksTableToolbarActionsProps {
   table: Table<Task>

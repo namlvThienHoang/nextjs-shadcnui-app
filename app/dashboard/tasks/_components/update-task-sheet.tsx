@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { tasks, type Task } from "@/db/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -37,6 +36,8 @@ import { Icons } from "@/components/icons"
 
 import { updateTask } from "../_lib/actions"
 import { updateTaskSchema, type UpdateTaskSchema } from "../_lib/validations"
+import { Task } from "@/types/schema"
+import { taskLabels, taskPriorities, taskStatus } from "../_lib/data"
 
 interface UpdateTaskSheetProps
   extends React.ComponentPropsWithRef<typeof Sheet> {
@@ -68,7 +69,7 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
   function onSubmit(input: UpdateTaskSchema) {
     startUpdateTransition(async () => {
       const { error } = await updateTask({
-        id: task.id,
+        id: task.id || '',
         ...input,
       })
 
@@ -131,13 +132,13 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        {tasks.label.enumValues.map((item) => (
+                        {taskLabels.map((item) => (
                           <SelectItem
-                            key={item}
-                            value={item}
+                            key={item.value}
+                            value={item.value}
                             className="capitalize"
                           >
-                            {item}
+                            {item.label}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -164,13 +165,13 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        {tasks.status.enumValues.map((item) => (
+                        {taskStatus.map((item) => (
                           <SelectItem
-                            key={item}
-                            value={item}
+                            key={item.value}
+                            value={item.value}
                             className="capitalize"
                           >
-                            {item}
+                            {item.label}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -197,13 +198,13 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
                     </FormControl>
                     <SelectContent>
                       <SelectGroup>
-                        {tasks.priority.enumValues.map((item) => (
+                        {taskPriorities.map((item) => (
                           <SelectItem
-                            key={item}
-                            value={item}
+                            key={item.value}
+                            value={item.value}
                             className="capitalize"
                           >
-                            {item}
+                            {item.label}
                           </SelectItem>
                         ))}
                       </SelectGroup>
